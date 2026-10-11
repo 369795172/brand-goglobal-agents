@@ -42,6 +42,7 @@ flowchart LR
 
 ## Demo
 
+- **在线交互演示**：https://369795172.github.io/brand-goglobal-agents/ （单文件零依赖页面，可交互运行核心环：选题输入、平台选择、声纹约束加载、逐平台提示词组装、示例草稿、发布门与交付包 manifest；示例草稿按 demo 同一提示词真实生成并标注口径）
 - 5 分钟看懂编排逻辑：[docs/03-demo.md](docs/03-demo.md)
 - 可运行的最小核心环：`demo/run_demo.py`（一个选题 → 五平台原生文案草稿，声纹约束生效；支持无 API key 的 dry-run 模式）
 
@@ -64,3 +65,8 @@ python3 run_demo.py --topic "..."      # 真实生成（自带 OpenAI 兼容端�
 ## 团队
 
 一人团队（OPC 模式本尊）。队长负责选题判断、声纹审核、发布门确认；Agent 负责产能。
+
+## 仓库
+
+- 提交仓库（HackForger）：https://www.synnovator.com/marvinyuan/brand-goglobal-agents
+- GitHub 镜像 + 在线演示源：https://github.com/369795172/brand-goglobal-agents
