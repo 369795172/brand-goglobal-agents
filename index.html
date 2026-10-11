@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoGlobal Content Crew · 品牌出海 Agent 流水线 · 交互 Demo</title>
+<meta name="description" content="一个选题进，五个平台原生形态出：品牌出海多平台图文获客 Agent 流水线的可交互演示。雪窦山 AIGC+OPC 品牌出海赛道参赛作品。">
+<style>
+:root{
+  --ink:#16232e; --ink-2:#3d4f5e; --ink-3:#6b7d8c;
+  --paper:#f7f8f9; --card:#ffffff; --line:#dde4ea;
+  --accent:#0f766e; --accent-soft:#e6f2f0; --accent-2:#b45309;
+  --accent-2-soft:#fdf1e3; --code-bg:#0f1c26; --code-ink:#d7e3ec;
+  --ok:#15803d; --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+  color:var(--ink);background:var(--paper);line-height:1.65;font-size:16px}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:linear-gradient(180deg,#10222c,#16232e);color:#e8eef2;padding:44px 0 38px}
+header .wrap{display:flex;flex-direction:column;gap:10px}
+.kicker{font-size:13px;letter-spacing:.12em;color:#8fb8b0;text-transform:uppercase}
+h1{font-size:clamp(24px,4vw,34px);font-weight:700;letter-spacing:.01em}
+.sub{color:#b9c7d0;font-size:15px;max-width:760px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.badge{font-size:12.5px;border:1px solid #3d5563;border-radius:999px;padding:3px 12px;color:#cfdbe2}
+section{padding:40px 0}
+section.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+h2{font-size:21px;margin-bottom:6px}
+h2 .en{color:var(--ink-3);font-weight:400;font-size:14px;margin-left:8px}
+.lead{color:var(--ink-2);font-size:15px;max-width:760px;margin-bottom:18px}
+.claim{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;font-size:16.5px;font-weight:600;margin-bottom:16px}
+.claim-points{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:14px}
+.claim-points .pt{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;font-size:14px;font-weight:400}
+.pt b{display:block;font-size:13px;color:var(--accent);margin-bottom:4px;letter-spacing:.05em}
+/* demo console */
+.console{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(22,35,46,.05)}
+.console-bar{display:flex;align-items:center;gap:8px;background:#eef2f4;border-bottom:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--ink-2)}
+.dot{width:10px;height:10px;border-radius:50%;background:#c3ccd3}
+.dot.g{background:#4cb782}.dot.y{background:#e2b33c}.dot.r{background:#d9705f}
+.console-body{padding:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{cursor:pointer;user-select:none;font-size:13.5px;border:1.5px solid var(--line);border-radius:999px;padding:5px 14px;color:var(--ink-2);background:var(--card);transition:all .15s}
+.pill.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.mode-note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.run-row{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+button.run{font:inherit;font-weight:600;font-size:15px;color:#fff;background:var(--accent);border:none;border-radius:8px;padding:11px 26px;cursor:pointer;transition:background .15s}
+button.run:hover{background:#0c5f58}
+button.run:disabled{background:#9db4b0;cursor:default}
+.status{font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+/* staged output */
+#stages{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.stage{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;opacity:0;transform:translateY(6px);transition:all .4s}
+.stage.show{opacity:1;transform:none}
+.stage-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f2f5f6;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:600}
+.stage-head .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:11.5px;font-weight:700}
+.stage-head .lang{margin-left:auto;font-size:11.5px;color:var(--ink-3);font-weight:400}
+.stage-body{padding:14px 16px;font-size:14px}
+.voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px}
+.vc{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px}
+.vc b{display:block;font-size:12px;color:var(--accent);margin-bottom:3px;letter-spacing:.04em}
+.vc .banned{color:var(--accent-2)}
+details{margin-top:10px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+details summary{cursor:pointer;padding:8px 12px;font-size:13px;color:var(--ink-2);list-style:none}
+details summary::before{content:"▸ ";color:var(--accent)}
+details[open] summary::before{content:"▾ "}
+details .inner{padding:4px 12px 12px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:13px 14px;font-size:12.5px;line-height:1.6;overflow-x:auto;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+pre .role{color:#7fc7bd;font-weight:700}
+.draft{background:#fffdf8;border:1px solid #eadfbf;border-radius:8px;padding:14px 16px;white-space:pre-wrap;font-size:14.2px;word-break:break-word}
+.draft-tag{display:inline-block;font-size:11.5px;color:var(--accent-2);background:var(--accent-2-soft);border-radius:4px;padding:1px 8px;margin-bottom:8px}
+.gate{list-style:none}
+.gate li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.gate li:last-child{border-bottom:none}
+.cb{flex:0 0 auto;width:17px;height:17px;border:1.6px solid var(--ink-3);border-radius:4px;margin-top:2px;position:relative}
+.cb.human{background:repeating-linear-gradient(45deg,#f2f5f6,#f2f5f6 4px,#e4eaee 4px,#e4eaee 8px)}
+.cb.human::after{content:"?";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink-2);font-weight:700}
+.gate .pending{margin-left:auto;font-size:11.5px;color:var(--accent-2);white-space:nowrap}
+/* pipeline */
+.pipeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;counter-reset:layer}
+.node{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;position:relative;font-size:13.5px}
+.node b{display:block;font-size:14px;margin-bottom:4px}
+.node .d{color:var(--ink-2);font-size:12.5px;line-height:1.55}
+.node::before{counter-increment:layer;content:counter(layer);position:absolute;top:-9px;left:12px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px}
+.feedback{margin-top:12px;text-align:center;font-size:13px;color:var(--ink-3)}
+.feedback b{color:var(--accent)}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.8px;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#eef2f4;font-size:12.8px;letter-spacing:.03em;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.honest{margin-top:14px;background:var(--accent-2-soft);border-left:3px solid var(--accent-2);border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;font-size:13.5px;color:#7a4310}
+/* rubric nav */
+.rubric{display:flex;flex-direction:column;gap:8px}
+.rubric a.rrow{display:flex;gap:12px;align-items:baseline;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;font-size:14px;color:var(--ink)}
+.rubric a.rrow:hover{border-color:var(--accent);text-decoration:none}
+.rrow .w{flex:0 0 52px;font-weight:700;color:var(--accent);font-size:15px}
+.rrow .doc{color:var(--ink-3);font-size:12.5px;font-family:ui-monospace,Menlo,monospace;margin-left:auto}
+footer{background:#10222c;color:#9fb2bd;padding:30px 0;font-size:13.5px}
+footer .wrap{display:flex;flex-direction:column;gap:6px}
+footer a{color:#c5d6dd}
+.foot-links{display:flex;flex-wrap:wrap;gap:18px}
+@media print{
+  header{background:#16232e!important;-webkit-print-color-adjust:exact}
+  .console-bar,button.run{display:none}
+  .stage{opacity:1!important;transform:none!important;break-inside:avoid}
+  section{padding:18px 0}
+}
+@media (max-width:640px){
+  .rrow .doc{display:none}
+  .console-body{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Xuedoushan AIGC · 品牌出海赛道 · 参赛提交物</div>
+    <h1>GoGlobal Content Crew</h1>
+    <div class="sub">品牌出海多平台图文获客 Agent 流水线。一人公司 + 多 Agent：选题、文案、渠道适配、发布门、证据回流，一条可审计的管道。本页是核心环的可交互演示，完整方案与代码见提交仓库。</div>
+    <div class="badges">
+      <span class="badge">雪窦山 AIGC+OPC 品牌出海赛道</span>
+      <span class="badge">AI 图文获客子赛道</span>
+      <span class="badge">一人团队（OPC 模式本尊）</span>
+    </div>
+  </div>
+</header>
+
+<section id="claim">
+  <div class="wrap">
+    <div class="claim">获客内容的瓶颈不是生成，是持续供给平台原生形态内容的工程纪律。</div>
+    <div class="claim-points">
+      <div class="pt"><b>一次输入，五种原生形态</b>同一选题，X 是短断言串，Reddit 是长上下文帖，小红书是第一人称体。差异不是翻译，是按平台规范重写。</div>
+      <div class="pt"><b>声纹在提示词层硬约束</b>句法节奏、立场分档、禁用词表写进系统提示，违规稿由编辑环节打回，而不是靠人肉把关。</div>
+      <div class="pt"><b>发布门前置</b>每份交付包自带人工确认清单：标题、社区规范、来源锚点、时机、声纹自检五项，全过才允许发布。</div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="alt">
+  <div class="wrap">
+    <h2>交互演示：最小核心环<span class="en">minimal runnable core loop</span></h2>
+    <div class="lead">对应仓库 <code>demo/run_demo.py</code>（零第三方依赖，标准库实现）。下面输入一个选题，选择目标平台，点运行：会按真实编排顺序加载声纹约束、逐平台组装提示词、给出真实生成的示例草稿，最后附上发布门清单与交付包 manifest。改选题后提示词会实时跟着变，与脚本行为一致。</div>
+
+    <div class="console">
+      <div class="console-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:6px">run_demo.py · interactive</span>
+      </div>
+      <div class="console-body">
+        <div class="field">
+          <label>选题（topic）</label>
+          <input type="text" id="topic" value="为什么你的 AI 助手记不住上下文：三层上下文的工程解法">
+        </div>
+        <div class="field">
+          <label>目标平台（可多选）</label>
+          <div class="pills" id="pills"></div>
+          <div class="mode-note">模式：dry-run 编排预览 + 真实生成示例稿（示例基于默认选题、同一提示词生成，模型 GLM-5.2；脚本 live 模式支持任意 OpenAI 兼容端点）。</div>
+        </div>
+        <div class="run-row">
+          <button class="run" id="runBtn">▶ 运行核心环</button>
+          <span class="status" id="status"></span>
+        </div>
+        <div id="stages"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="arch">
+  <div class="wrap">
+    <h2>系统架构：六层管道<span class="en">research → topic → production → state → publish → evidence</span></h2>
+    <div class="lead">demo 是核心环的最小化。生产系统从研究语料到证据回流是一条完整管道，本页演示的是「生产层」的关键机制。</div>
+    <div class="pipeline">
+      <div class="node"><b>研究层</b><div class="d">66 竞品账号 / 198 内容样本 / 7 平台；90 条真实 URL 抽检通过率 80%</div></div>
+      <div class="node"><b>选题层</b><div class="d">63 选题入册 / 11 个方向；优先级评分模型（160-250 分）</div></div>
+      <div class="node"><b>生产层</b><div class="d">五段式多 Agent 文案流水线 + 声纹约束（本页 demo）</div></div>
+      <div class="node"><b>状态层</b><div class="d">本地 SSOT → 飞书五表幂等同步（398 行，重跑 create=0）+ 终态保护</div></div>
+      <div class="node"><b>发布层</b><div class="d">渠道 Adapter + 发布门；人工确认后才出站</div></div>
+      <div class="node"><b>回流层</b><div class="d">发布包 · 证据链 · SHA-256 清单，数据回流选题层</div></div>
+    </div>
+    <div class="feedback">↺ 发布数据回流选题层，形成闭环：<b>同一套语料、评分与声纹资产被每一条内容复用</b></div>
+  </div>
+</section>
+
+<section id="metrics" class="alt">
+  <div class="wrap">
+    <h2>关键数据（全部真实可核验）<span class="en">audited metrics</span></h2>
+    <table>
+      <tr><th>维度</th><th>数据</th><th>口径说明</th></tr>
+      <tr><td>研究语料</td><td class="num">66 账号 / 198 样本 / 7 平台</td><td>90 条真实 URL，抽检通过率 80%</td></tr>
+      <tr><td>选题资产</td><td class="num">63 选题 / 11 方向</td><td>优先级评分模型（160-250 分）</td></tr>
+      <tr><td>素材管线</td><td class="num">814 条素材全量索引</td><td>两次实拍事件，4 级质量判定</td></tr>
+      <tr><td>成片迭代</td><td class="num">10 版粗剪 + 4 份完整脚本</td><td>含 EDL 审阅文档线上链路</td></tr>
+      <tr><td>CMS 工程</td><td class="num">五表 398 行幂等同步</td><td>重跑 create=0，终态保护实测</td></tr>
+      <tr><td>人效</td><td class="num">单集 3-5.5 小时</td><td>一人产出多渠道交付包</td></tr>
+    </table>
+    <div class="honest">诚实口径声明：系统处于产能爬坡早期，新品牌已发布内容 1 条，互动数据暂无回流。因此业务价值按产能与人效口径陈述，不用增长口径。依据见仓库 docs/04-metrics.md。</div>
+  </div>
+</section>
+
+<section id="parity">
+  <div class="wrap">
+    <h2>Demo 与生产系统对照<span class="en">demo vs production</span></h2>
+    <table>
+      <tr><th>能力</th><th>本页 demo</th><th>生产系统</th></tr>
+      <tr><td>多平台文案适配</td><td>5 平台</td><td>7 平台 + 持续扩展</td></tr>
+      <tr><td>声纹约束</td><td>简化版（提示词层）</td><td>L1-L7 完整档案 + 禁用词表 + 自检清单</td></tr>
+      <tr><td>编辑审核环</td><td>无</td><td>独立审核 Agent 打回机制</td></tr>
+      <tr><td>状态管理</td><td>本地文件</td><td>飞书五表幂等同步 + 终态保护</td></tr>
+      <tr><td>素材与成片管线</td><td>无</td><td>814 素材索引 + EDL 审阅链路</td></tr>
+      <tr><td>证据链</td><td>无</td><td>SHA-256 清单</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="rubric" class="alt">
+  <div class="wrap">
+    <h2>提交文档导航（按评审维度）<span class="en">rubric-mapped docs</span></h2>
+    <div class="lead">完整方案按评分权重组织，全部在提交仓库：</div>
+    <div class="rubric" id="rubricNav"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a id="linkForge" href="#" target="_blank" rel="noopener">提交仓库（HackForger）</a>
+      <a id="linkMirror" href="#" target="_blank" rel="noopener">GitHub 镜像</a>
+      <a href="https://369795172.github.io/brand-goglobal-agents/" target="_blank" rel="noopener">本页地址</a>
+    </div>
+    <div>一人团队（OPC 模式本尊）：队长负责选题判断、声纹审核、发布门确认；Agent 负责产能。</div>
+    <div>示例输出说明：页内草稿按 demo 同一提示词真实生成（GLM-5.2，2026-10-11），生产实测使用 GLM 4.x 系列，脚本支持任意 OpenAI 兼容端点。</div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ---- data: mirrors demo/run_demo.py exactly ---- */
+const VOICE = [
+  ["sentence_rhythm","核心判断 6-15 字单独成句；解释 15-25 字一句一论点；超 25 字拆句"],
+  ["stance","高置信用「必须/不可行」；不确定标「我认为/推断」；事实、推断、猜测三档分开"],
+  ["evidence","数字保留源头精度；关键判断挂来源或数据锚点"],
+  ["metaphor_domain","系统/架构类比优先（闭环、管道、水位）；禁文学比喻（火焰、旅程、绽放）"],
+  ["banned_words","禁用词表：营销腔词汇零容忍（见右侧完整清单）"],
+  ["opening","第 2-3 句进正题；禁「在当今快速变化的时代」式开场"],
+  ["closing","抛具体问题或行动选项收尾；禁全文复述总结与升华"],
+];
+const BANNED = ["赋能","抓手","打法","拉齐","让我们一起","干货满满","game-changer","unlock","unleash","delve into"];
+
+const PLATFORMS = {
+  x: {
+    label:"X / Twitter", file:"x_thread.md", lang:"English",
+    form:"thread of 2-4 short posts; one assertion per post; data or contrarian hook first; cite sources",
+    draft:`1/ Your AI assistant doesn't "forget" randomly. Context is being treated as a buffer when it should be treated as a system.
+
+Buffers overflow. Systems get architecture.
+
+2/ Three layers, borrowed from how one indie builder keeps a 40+ project monorepo coherent with agents:
+L3 rules: identity & hard constraints, loaded every session
+L1/L2 working memory: recent observations, auto-captured
+Heartbeat: observers write even when you're offline
+
+3/ Same pattern now runs a content pipeline: 63 scored topics, 198 sample corpus, 814 indexed assets feeding one person's weekly output across 7 platforms.
+
+Discipline beats generation. Anyone can write one post. The moat is the pipe.
+
+Which layer is missing in your setup?`
+  },
+  reddit: {
+    label:"Reddit", file:"reddit_post.md", lang:"English",
+    form:"long-context post, 250-450 words; real data and personal build log style; zero marketing tone; end with a concrete question",
+    draft:`Why your AI assistant keeps forgetting context (and the 3-layer fix that worked for my one-person content pipeline)
+
+I run a solo operation: one person, multiple AI agents, a content pipeline that has to produce platform-native drafts every week (5 platforms, different languages/registers). My assistants kept "forgetting" everything that mattered: my voice rules, what we already published, which topics were scored and why. Every session started from zero.
+
+The fix wasn't a bigger context window. It was treating context as a system, not a buffer. Three layers:
+
+1. L3 rules. Identity, hard constraints, banned-word lists, voice profile. Loaded every session, non-negotiable. In my case this includes sentence-rhythm rules (short assertions stand alone) and a marketing-tone blacklist.
+
+2. L1/L2 working memory. A single observations file, auto-written by watcher agents, distilled periodically. Recent decisions, lessons, corrections. The key move: capture is automatic, distillation is scheduled. Manual journaling never survived contact with a busy week.
+
+3. Heartbeat. Observer/reflector jobs run on a schedule and keep writing even when I'm not in a session. Memory accumulates while I sleep.
+
+Real numbers from the production system this runs on: 66 competitor accounts / 198 content samples researched; 63 scored topics in the backlog; 814 assets fully indexed; a 5-table CMS synced idempotently (398 rows, re-run creates zero duplicates); output per episode: 3-5.5 hours of human time, one person, multi-channel delivery packages.
+
+Honest caveat: we're early on the output side (1 piece published on the new brand, engagement data not back yet), so I measure capacity and cycle time, not growth.
+
+What I learned the hard way: the bottleneck isn't generation quality. It's the engineering discipline of continuously supplying platform-native content. One LLM call writes one draft. The pipeline writes every week, with the same voice, and remembers why.
+
+Question for the builders here: how do you handle memory for recurring workflows? Single observations file, per-project logs, or full retrieval stack? I keep mine dumb and flat on purpose; wondering what trade-offs others hit.`
+  },
+  xiaohongshu: {
+    label:"小红书", file:"xiaohongshu_note.md", lang:"简体中文",
+    form:"第一人称体：「我实际做了 X，结果是 Y」；正文 3-5 段；标注实践边界；标题带具体数字",
+    draft:`一人 + AI 每周 5 平台出稿，我把上下文做成 3 层，效率翻了一倍
+
+我实际做的：给内容流水线搭了三层上下文。规则层每次会话必加载（声纹 + 禁用词），工作记忆层由观察 agent 自动写，心跳层在我离线时也持续积累。结果是：单集人效 3-5.5 小时，一人产出 5 个平台的原生交付包。
+
+为什么值得做：AI 记不住上下文，多数人以为是窗口不够大。我的实测结论是结构问题。当成缓冲区就会溢出，当成系统就有架构。选题层现在压着 63 个已评分选题、198 条竞品样本语料，每次写稿都在复用，不用从零开始。
+
+管道长这样：研究（66 账号样本）→ 选题（评分入册）→ 生产（多 Agent + 声纹约束）→ 状态（五表幂等同步）→ 发布（人工门）→ 回流。每一环都能审计，重跑零重复。
+
+实践边界，说清楚：系统在产能爬坡早期，新品牌已发布内容 1 条，互动数据还没有回流。所以我只讲产能和人效口径，不讲增长故事。这笔记本身也是管道产物：一个选题进，五个平台的原生形态出。
+
+你在用 AI 做持续产出时，卡在哪一层？规则、记忆还是回流？`
+  },
+  instagram: {
+    label:"Instagram", file:"instagram_caption.md", lang:"English",
+    form:"caption for a visual-first post; 2-3 sentences; concrete scene, no hashtag spam (max 5 tags)",
+    draft:`One topic in, five platform-native drafts out. The whiteboard shows the actual pipeline: research corpus → scored topics → multi-agent drafting → human publish gate. Same voice, every platform, every week.
+
+Built by one person + agents. Discipline beats generation.
+
+#AIagents #buildinpublic #solodeveloper #contentpipeline #onepersoncompany`
+  },
+  discord: {
+    label:"Discord", file:"discord_announcement.md", lang:"English",
+    form:"community announcement in a builder/DIY server; plain tone; what we shipped, what is next, one CTA",
+    draft:`@here pipeline update for anyone following the build log
+
+**Shipped this cycle:**
+- 3-layer context system running in production: rules layer (voice + banned words, every session), auto-captured working memory, scheduled heartbeat distillation
+- 5-platform adapter set live: X thread / Reddit long-post / Xiaohongshu first-person / IG caption / Discord announcement, each with its own native form spec
+- Publish gate enforced: title, community rules, source anchors, timing, voice self-check. Nothing ships without human sign-off
+
+**Numbers from the audit:** 63 scored topics in backlog, 198-sample research corpus, 814 indexed assets, CMS synced idempotently across 5 tables (398 rows, zero duplicates on re-run).
+
+**Next:** first batch of overseas-platform posts goes out through the same pipe (X + Reddit), then engagement data loops back into topic scoring.
+
+CTA: if you're running recurring AI workflows, try splitting your context into rules / working memory / heartbeat. Reply with your stack — collecting patterns for the next writeup.`
+  },
+};
+
+const GATE = [
+  "标题含具体数字或具体场景（非泛化口号）",
+  "标签/社区规则核对（subreddit / 版块规范）",
+  "来源锚点：文中数字均有出处或标注推断",
+  "发布时机核对（目标时区工作时段）",
+  "声纹自检：禁用词表零命中",
+];
+
+const DOCS = [
+  ["15%","业务需求与痛点","docs/01-problem.md"],
+  ["25%","Agent 技术方案","docs/02-architecture.md"],
+  ["20%","产品或网站 Demo","docs/03-demo.md + demo/ + 本页"],
+  ["25%","业务价值与实际效益","docs/04-metrics.md"],
+  ["15%","创新性与可扩展性 + 合规","docs/05-roadmap.md"],
+];
+const FORGE_URL = "https://www.synnovator.com/marvinyuan/brand-goglobal-agents";
+const GH_URL = "https://github.com/369795172/brand-goglobal-agents";
+
+/* ---- prompt assembly: mirrors build_prompt() in run_demo.py ---- */
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function buildPrompt(topic, p){
+  const v = {
+    rhythm:"核心判断 6-15 字单独成句；解释 15-25 字一句一论点；超 25 字拆句",
+    stance:"高置信用「必须/不可行」；不确定标「我认为/推断」；事实、推断、猜测三档分开",
+    evidence:"数字保留源头精度；关键判断挂来源或数据锚点",
+    metaphor:"系统/架构类比优先（闭环、管道、水位）；禁文学比喻（火焰、旅程、绽放）",
+    opening:"第 2-3 句进正题；禁「在当今快速变化的时代」式开场",
+    closing:"抛具体问题或行动选项收尾；禁全文复述总结与升华",
+  };
+  const sys = "You are a senior content writer inside a brand content pipeline.\n" +
+    "Hard constraints (violations are rejected by the editor agent):\n" +
+    "- Rhythm: " + v.rhythm + "\n- Stance: " + v.stance + "\n- Evidence: " + v.evidence +
+    "\n- Metaphors: " + v.metaphor + "\n- Opening: " + v.opening + "\n- Closing: " + v.closing +
+    "\n- Banned words (never use): " + BANNED.join(", ") + "\n" +
+    "Output only the finished draft, no meta commentary.";
+  const usr = "Brand context: an indie builder brand documenting real AI-engineering practice; " +
+    "audience = AI builders moving from tool use to durable systems.\n" +
+    "Platform: " + p.form + " (language: " + p.lang + ")\nTopic: " + topic + "\n" +
+    "Write the platform-native draft now.";
+  return [["system",sys],["user",usr]];
+}
+
+/* ---- UI wiring ---- */
+const selected = new Set(Object.keys(PLATFORMS));
+const pillsEl = document.getElementById("pills");
+Object.entries(PLATFORMS).forEach(([key,p])=>{
+  const el = document.createElement("span");
+  el.className = "pill on"; el.textContent = p.label;
+  el.onclick = ()=>{
+    if(selected.has(key) && selected.size===1) return; // keep >=1
+    selected.has(key) ? (selected.delete(key), el.classList.remove("on"))
+                      : (selected.add(key), el.classList.add("on"));
+  };
+  el.dataset.key = key;
+  pillsEl.appendChild(el);
+});
+
+const stagesEl = document.getElementById("stages");
+const statusEl = document.getElementById("status");
+const runBtn = document.getElementById("runBtn");
+let timers = [];
+function clearTimers(){timers.forEach(clearTimeout);timers=[]}
+function sleep(ms){return new Promise(r=>timers.push(setTimeout(r,ms)))}
+function el(html){const t=document.createElement("template");t.innerHTML=html.trim();return t.content.firstChild}
+function addStage(html){const s=el(html);stagesEl.appendChild(s);requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add("show")));return s}
+
+async function run(){
+  clearTimers(); stagesEl.innerHTML="";
+  const topic = document.getElementById("topic").value.trim() || "（未命名选题）";
+  const keys = Object.keys(PLATFORMS).filter(k=>selected.has(k));
+  const isDefault = topic === document.getElementById("topic").defaultValue;
+  runBtn.disabled = true;
+  const t0 = performance.now();
+
+  /* stage 1: voice constraints */
+  statusEl.textContent = "running: 加载声纹约束…";
+  addStage(
+    '<div class="stage"><div class="stage-head"><span class="n">1</span>声纹约束加载 · brand voice profile<span class="lang">system prompt layer</span></div>'+
+    '<div class="stage-body"><div class="voice-grid">'+VOICE.map(v=>
+      '<div class="vc"><b>'+v[0]+'</b>'+esc(v[1])+'</div>').join("")+
+    '<div class="vc"><b>banned_words（完整表）</b><span class="banned">'+BANNED.map(esc).join(" · ")+'</span></div>'+
+    '</div></div></div>');
+  await sleep(500);
+
+  /* stages 2..N: per platform */
+  let i = 2;
+  for(const k of keys){
+    const p = PLATFORMS[k];
+    statusEl.textContent = "running: ["+k+"] 组装提示词 → 生成草稿…";
+    const msgs = buildPrompt(topic,p);
+    const promptPre = msgs.map(m=>'<span class="role">--- '+m[0]+' ---</span>\n'+esc(m[1])).join("\n\n");
+    const s = addStage(
+      '<div class="stage"><div class="stage-head"><span class="n">'+(i++)+'</span>'+p.label+' → '+p.file+'<span class="lang">'+p.lang+'</span></div>'+
+      '<div class="stage-body">'+
+      '<div style="font-size:12.5px;color:var(--ink-3);margin-bottom:4px">form spec: '+esc(p.form)+'</div>'+
+      '<details><summary>查看发送给模型的完整提示词（随选题实时生成）</summary><div class="inner"><pre>'+promptPre+'</pre></div></details>'+
+      '<div class="draft" style="margin-top:12px"><span class="draft-tag">示例草稿 · '+(isDefault?"默认选题":"当前选题对应示例为默认选题版本")+' · 同一提示词真实生成（GLM-5.2，2026-10-11）</span>'+
+      (isDefault?esc(p.draft):"<i style='color:var(--ink-3)'>示例输出基于默认选题生成；当前自定义选题下，脚本 live 模式可按上方提示词实时生成</i>")+'</div>'+
+      '</div></div>');
+    s.scrollIntoView({behavior:"smooth",block:"nearest"});
+    await sleep(450);
+  }
+
+  /* publish gate */
+  statusEl.textContent = "running: 附加发布门…";
+  addStage(
+    '<div class="stage"><div class="stage-head"><span class="n">'+(i++)+'</span>发布门 · publish gate（人工确认）<span class="lang">PENDING-HUMAN</span></div>'+
+    '<div class="stage-body"><ul class="gate">'+GATE.map(g=>
+      '<li><span class="cb human"></span>'+esc(g)+'<span class="pending">PENDING-HUMAN</span></li>').join("")+
+    '</ul></div></div>');
+  await sleep(400);
+
+  /* package.json */
+  const now = new Date();
+  const pkg = {
+    topic: topic,
+    mode: "live (示例)",
+    model: "glm-5.2（示例） / 可配置（生产实测 GLM 4.x）",
+    generated_at: now.toISOString().slice(0,19),
+    platforms: Object.fromEntries(keys.map(k=>[k,{file:PLATFORMS[k].file,chars:(isDefault?PLATFORMS[k].draft.length:null),status:isDefault?"draft":"prompt-only（自定义选题）"}])),
+    publish_gate: GATE.map(g=>({item:g,status:"PENDING-HUMAN"})),
+  };
+  addStage(
+    '<div class="stage"><div class="stage-head"><span class="n">'+(i++)+'</span>交付包 manifest · package.json<span class="lang">out/&lt;timestamp&gt;/</span></div>'+
+    '<div class="stage-body"><pre>'+esc(JSON.stringify(pkg,null,2))+'</pre>'+
+    '<div style="font-size:12.5px;color:var(--ink-3);margin-top:8px">生产模式落盘 demo/out/&lt;时间戳&gt;/，每平台一个文件 + manifest；发布前需人工过发布门。</div></div></div>');
+
+  statusEl.textContent = "done · "+keys.length+" 平台 · "+((performance.now()-t0)/1000).toFixed(1)+"s（页面动画，非模型耗时）";
+  runBtn.disabled = false;
+}
+runBtn.onclick = run;
+
+/* rubric nav + footer links */
+const nav = document.getElementById("rubricNav");
+DOCS.forEach(d=>{
+  const a = document.createElement("a");
+  a.className="rrow"; a.href = FORGE_URL+"/src/branch/main/"+d[2].split(" ")[0]; a.target="_blank"; a.rel="noopener";
+  a.innerHTML = '<span class="w">'+d[0]+'</span><span>'+d[1]+'</span><span class="doc">'+esc(d[2].split(" ")[0])+'</span>';
+  nav.appendChild(a);
+});
+document.getElementById("linkForge").href = FORGE_URL;
+document.getElementById("linkMirror").href = GH_URL;
+</script>
+</body>
+</html>
