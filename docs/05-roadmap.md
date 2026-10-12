@@ -26,7 +26,7 @@
 
 | 阶段 | 时间 | 交付 |
 |---|---|---|
-| P1 | 10/12 前 | X + Reddit 第一批内容上线（本系统产出，自举案例）；demo 视频链接更新 |
+| P1 | 10/12 ✅ 已达成 | X + Reddit 第一批内容上线（本系统产出，自举案例）：[X thread](https://x.com/MarvinYuan777/status/2109651532727877983) · [Reddit build log](https://www.reddit.com/r/SideProject/comments/1x43b9p/why_your_ai_assistant_keeps_forgetting_context/)（2026-10-12）；演示视频由可交互 [Demo 页](https://369795172.github.io/brand-goglobal-agents/) 替代（评审可自行操作核心环）|
 | P2 | 10/24 决赛前 | INS adapter（视觉模板）；发布数据首轮回流 |
 | P3 | 赛后 | Discord 社区运营 adapter；选题评分模型接入回流数据 |
 
